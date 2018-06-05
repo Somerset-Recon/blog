@@ -6,10 +6,25 @@
 #
 #---------------------------------------------------------------------
 
+# A function to determine if an operand of an instruction is located on the stack. This is used for finding stack buffers 
+# that have the potential to be overflowed
+#
+# @param addr - the address of the instruction with the operand that we are checking 
+# @param idx  - the index of the operand that we are checking whether it is on the stack
+#
+# Returns a True if the specified operand is on the stack
+#
 def is_stack_buffer(addr, idx):
     inst = DecodeInstruction(addr)
     return get_stkvar(inst[idx], inst[idx].addr) != None
 
+# A function that finds a specified argument to a function call 
+#
+# @param addr - the address of the function call
+# @param arg_num - the index of the parameter that we are interested 
+#
+# Returns the operand that corresponds to the specified argument
+#
 def find_arg(addr, arg_num):
     function_head = GetFunctionAttr(addr, idc.FUNCATTR_START)    # Get the start address of the function that we are in
     steps = 0
