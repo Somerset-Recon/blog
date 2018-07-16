@@ -15,12 +15,30 @@
 #
 # Returns a True if the specified operand is on the stack
 #
+
 info = idaapi.get_inf_structure()
 ea = 0
 
+def twos_compl(val, bits=32):
+    """compute the 2's complement of int value val"""
+    if (val & (1 << (bits - 1))) != 0: # if sign bit is set e.g., 8bit: 128-255
+        val = val - (1 << bits)        # compute negative value
+    return val                         # return positive value as is
+    
 def is_stack_buffer(addr, idx):
     inst = DecodeInstruction(addr)
-    return get_stkvar(inst[idx], inst[idx].addr) != None
+
+    # IDA < 7.0
+    try:
+        ret = get_stkvar(inst[idx], inst[idx].addr) != None
+    # IDA >= 7.0
+    except:
+        from ida_frame import *
+        v = inst[idx].addr
+        if sys.maxint < v:
+            v = twos_compl(v)
+        ret = get_stkvar(inst, inst[idx], v)
+    return ret
 
 while ea != BADADDR:
     addr = FindText(ea+2,SEARCH_DOWN|SEARCH_NEXT, 0, 0, "rep movsd");
@@ -42,7 +60,7 @@ while ea != BADADDR:
             elif _op == "lea" and GetOpnd(_addr, 0) == opnd:
                 # We found the origin of the destination, check to see if it is in the stack
                 if is_stack_buffer(_addr, 1):
-                    print "0x%X"%_addr
+                    print "0x%X"%ea
                     break
                 else: break
             elif _op == "mov" and GetOpnd(_addr, 0) == opnd:
