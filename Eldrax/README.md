@@ -1,6 +1,6 @@
 # Eldrax
 
-Eldrax is a Ghidra plugin that attempts to identify the sinks and their calling functions in a program.
+Eldrax is a Ghidra plugin that attempts to identify sinks and their calling functions in a program.
 
 # Installation
 
