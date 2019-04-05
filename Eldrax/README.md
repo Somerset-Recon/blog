@@ -8,7 +8,7 @@ Eldrax is a Ghidra plugin that attempts to identify the sinks and their calling 
 
 ```
 git clone https://github.com/Somerset-Recon/blog.git
-cd Eldrax/install
+cd blog/Eldrax/install
 export $GHIDRA_ROOT=path-to-ghidra
 chmod +x install.sh
 ./install.sh
